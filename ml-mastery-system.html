@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Mastery System — 3 Month Command Center</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#0a0d13;
+  --bg-alt:#0e131c;
+  --surface:rgba(255,255,255,0.045);
+  --surface-2:rgba(255,255,255,0.075);
+  --border:rgba(255,255,255,0.09);
+  --border-soft:rgba(255,255,255,0.055);
+  --text:#e9edf6;
+  --text-dim:#8d96ab;
+  --text-faint:#5b6379;
+  --ml:#5b8def;
+  --ml-soft:rgba(91,141,239,0.14);
+  --math:#f2a65a;
+  --math-soft:rgba(242,166,90,0.14);
+  --rev:#63d9a8;
+  --rev-soft:rgba(99,217,168,0.14);
+  --proj:#c792ea;
+  --proj-soft:rgba(199,146,234,0.14);
+  --danger:#f2726d;
+  --danger-soft:rgba(242,114,109,0.14);
+  --radius:18px;
+  --radius-sm:11px;
+  --font-head:'Space Grotesk','Segoe UI',ui-sans-serif,system-ui,sans-serif;
+  --font-body:'Inter','Segoe UI',ui-sans-serif,system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(91,141,239,0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(199,146,234,0.08), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--ml);color:#fff;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+a{color:var(--ml);}
+button{font-family:var(--font-body);cursor:pointer;}
+input,textarea,select{font-family:var(--font-body);}
+
+.app{display:flex;min-height:100vh;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+  width:250px;flex-shrink:0;
+  background:linear-gradient(180deg, var(--bg-alt), var(--bg));
+  border-right:1px solid var(--border-soft);
+  padding:22px 14px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  z-index:40;
+}
+.brand{padding:4px 10px 20px 10px;}
+.brand-mark{font-family:var(--font-mono);font-size:11px;letter-spacing:2px;color:var(--rev);text-transform:uppercase;}
+.brand-title{font-family:var(--font-head);font-weight:700;font-size:19px;letter-spacing:-0.02em;margin-top:4px;line-height:1.15;}
+.brand-sub{font-size:11.5px;color:var(--text-faint);margin-top:6px;font-family:var(--font-mono);}
+
+.nav-group{margin-bottom:14px;}
+.nav-group-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1.6px;color:var(--text-faint);text-transform:uppercase;padding:8px 10px 4px;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:10px;
+  color:var(--text-dim);font-size:13.5px;font-weight:500;
+  cursor:pointer;transition:background .15s,color .15s;
+  border:1px solid transparent;
+}
+.nav-item:hover{background:var(--surface);color:var(--text);}
+.nav-item.active{background:var(--ml-soft);color:#cfe0ff;border-color:rgba(91,141,239,0.35);}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.55;flex-shrink:0;}
+
+.sidebar-foot{margin-top:10px;padding:10px;font-size:10.5px;color:var(--text-faint);font-family:var(--font-mono);line-height:1.6;}
+
+/* ---------- TOPBAR / MAIN ---------- */
+.main{flex:1;min-width:0;}
+.topbar{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 28px;background:rgba(10,13,19,0.72);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-soft);
+}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.hamburger{display:none;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;width:36px;height:36px;align-items:center;justify-content:center;font-size:16px;}
+.view-title{font-family:var(--font-head);font-weight:700;font-size:20px;letter-spacing:-0.01em;}
+.view-caption{color:var(--text-faint);font-size:12px;font-family:var(--font-mono);margin-top:2px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.pill{
+  font-family:var(--font-mono);font-size:11.5px;color:var(--text-dim);
+  background:var(--surface);border:1px solid var(--border);
+  padding:6px 12px;border-radius:999px;display:flex;align-items:center;gap:7px;
+}
+.pill b{color:var(--text);font-weight:600;}
+
+.content{padding:26px 28px 80px;max-width:1180px;margin:0 auto;}
+.view{display:none;animation:fadeIn .25s ease;}
+.view.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ---------- CARDS / GLASS ---------- */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  backdrop-filter:blur(10px);
+}
+.card + .card{margin-top:16px;}
+.grid{display:grid;gap:16px;}
+.grid-2{grid-template-columns:repeat(2,1fr);}
+.grid-3{grid-template-columns:repeat(3,1fr);}
+.grid-4{grid-template-columns:repeat(4,1fr);}
+@media(max-width:900px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+
+.eyebrow{font-family:var(--font-mono);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;}
+h2.section-title{font-family:var(--font-head);font-size:22px;font-weight:700;letter-spacing:-0.01em;margin:0 0 4px;}
+p.section-desc{color:var(--text-dim);font-size:13.5px;margin:0 0 18px;line-height:1.6;max-width:680px;}
+
+.stat-card{padding:18px;}
+.stat-num{font-family:var(--font-mono);font-size:28px;font-weight:600;letter-spacing:-0.02em;}
+.stat-label{font-size:12px;color:var(--text-dim);margin-top:4px;}
+.stat-bar{height:5px;border-radius:4px;background:var(--surface-2);margin-top:12px;overflow:hidden;}
+.stat-bar > i{display:block;height:100%;border-radius:4px;}
+
+.btn{
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text);
+  padding:8px 14px;border-radius:10px;font-size:12.5px;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+}
+.btn:hover{border-color:rgba(255,255,255,0.22);background:rgba(255,255,255,0.12);}
+.btn-accent{background:var(--ml);border-color:var(--ml);color:#fff;}
+.btn-accent:hover{background:#4c7fe0;}
+.btn-ghost{background:transparent;}
+.btn-sm{padding:5px 10px;font-size:11.5px;border-radius:8px;}
+
+.tag{
+  font-family:var(--font-mono);font-size:10.5px;padding:3px 9px;border-radius:999px;
+  border:1px solid var(--border);color:var(--text-dim);display:inline-flex;align-items:center;gap:5px;
+}
+.tag-ml{color:#bcd3ff;background:var(--ml-soft);border-color:rgba(91,141,239,.3);}
+.tag-math{color:#ffd9ad;background:var(--math-soft);border-color:rgba(242,166,90,.3);}
+.tag-rev{color:#b7f2d9;background:var(--rev-soft);border-color:rgba(99,217,168,.3);}
+.tag-proj{color:#ecd3fb;background:var(--proj-soft);border-color:rgba(199,146,234,.3);}
+
+/* ---------- TIMELINE / SCHEDULE ---------- */
+.day-nav{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.timeline{position:relative;padding-left:2px;}
+.slot{
+  display:grid;grid-template-columns:104px 1fr;gap:16px;
+  padding:13px 0;border-bottom:1px dashed var(--border-soft);
+}
+.slot:last-child{border-bottom:none;}
+.slot-time{font-family:var(--font-mono);font-size:11.5px;color:var(--text-faint);padding-top:2px;}
+.slot-body{display:flex;flex-direction:column;gap:5px;}
+.slot-label{font-weight:600;font-size:14px;}
+.slot-detail{font-size:12.5px;color:var(--text-dim);line-height:1.55;}
+.slot-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;}
+.slot.tag-break{opacity:.55;}
+.slot.tag-fixed .slot-label{color:#ffd9ad;}
+
+/* ---------- ROADMAP ---------- */
+.phase-block{margin-bottom:22px;}
+.phase-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.phase-name{font-family:var(--font-head);font-weight:700;font-size:15.5px;}
+.phase-bar{width:120px;height:5px;border-radius:4px;background:var(--surface-2);overflow:hidden;}
+.phase-bar>i{display:block;height:100%;background:var(--ml);}
+.topic-row{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:11px 12px;border-radius:12px;border:1px solid var(--border-soft);
+  background:rgba(255,255,255,0.02);margin-bottom:7px;
+}
+.topic-row.done{opacity:.5;}
+.topic-check{
+  width:19px;height:19px;border-radius:6px;border:1.5px solid var(--border);
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--rev);
+}
+.topic-row.done .topic-check{background:var(--rev-soft);border-color:var(--rev);}
+.topic-main{flex:1;min-width:0;}
+.topic-title{font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.topic-meta{font-size:11.5px;color:var(--text-faint);margin-top:3px;font-family:var(--font-mono);}
+.topic-math{font-size:11.5px;color:var(--text-dim);margin-top:5px;}
+
+/* ---------- CALENDAR ---------- */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cal-dow{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);text-align:center;padding-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.cal-cell{
+  aspect-ratio:1;border-radius:9px;border:1px solid var(--border-soft);
+  background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:11px;color:var(--text-dim);cursor:pointer;position:relative;gap:2px;
+}
+.cal-cell:hover{border-color:var(--border);}
+.cal-cell.today{border-color:var(--ml);box-shadow:0 0 0 1px var(--ml) inset;}
+.cal-dots{display:flex;gap:2px;}
+.cal-dot{width:5px;height:5px;border-radius:50%;}
+.cal-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;color:var(--text-dim);}
+.cal-legend span{display:inline-flex;align-items:center;gap:6px;}
+.cal-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+
+/* ---------- HABIT TRACKER ---------- */
+.habit-table-wrap{overflow-x:auto;}
+table.habit-table{border-collapse:collapse;width:100%;min-width:760px;}
+table.habit-table th,table.habit-table td{padding:7px 8px;text-align:center;border-bottom:1px solid var(--border-soft);font-size:11.5px;}
+table.habit-table th{font-family:var(--font-mono);color:var(--text-faint);font-weight:500;text-transform:uppercase;font-size:9.5px;letter-spacing:0.5px;}
+table.habit-table td:first-child,table.habit-table th:first-child{text-align:left;font-family:var(--font-mono);color:var(--text-dim);white-space:nowrap;}
+.hcheck{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--border);display:inline-flex;align-items:center;justify-content:center;color:var(--rev);font-size:11px;}
+.hcheck.on{background:var(--rev-soft);border-color:var(--rev);}
+.month-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.month-tab{padding:6px 14px;border-radius:999px;border:1px solid var(--border);font-size:12px;color:var(--text-dim);}
+.month-tab.active{background:var(--ml-soft);color:#cfe0ff;border-color:rgba(91,141,239,.35);}
+
+/* ---------- FORMS ---------- */
+label.field-label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:6px;font-weight:600;}
+textarea,input[type=text],input[type=date],input[type=number],select{
+  width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;color:var(--text);font-size:13.5px;resize:vertical;
+}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--ml);}
+.field{margin-bottom:16px;}
+
+/* ---------- PROJECT CARDS ---------- */
+.project-card{border-left:3px solid var(--proj);}
+.project-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.project-title{font-family:var(--font-head);font-weight:700;font-size:16px;}
+.project-goal{color:var(--text-dim);font-size:13px;margin:8px 0 12px;line-height:1.55;}
+.project-row{display:flex;gap:22px;flex-wrap:wrap;font-size:12px;color:var(--text-dim);margin-top:6px;}
+.project-row b{color:var(--text);font-weight:600;}
+
+/* ---------- ORBIT ---------- */
+.orbit-wrap{display:flex;align-items:center;gap:26px;flex-wrap:wrap;}
+.orbit-legend{display:flex;flex-direction:column;gap:10px;font-size:12.5px;}
+.orbit-legend .row{display:flex;align-items:center;gap:8px;}
+.orbit-legend .dot{width:10px;height:10px;border-radius:50%;}
+
+/* ---------- MISC ---------- */
+.divider{height:1px;background:var(--border-soft);margin:18px 0;}
+.empty-note{color:var(--text-faint);font-size:12.5px;font-style:italic;}
+.goal-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-soft);}
+.goal-item.done .goal-text{text-decoration:line-through;color:var(--text-faint);}
+.goal-text{flex:1;font-size:13.5px;}
+.resource-card h4{margin:0 0 8px;font-family:var(--font-head);font-size:14.5px;}
+.resource-card ul{margin:0;padding-left:18px;font-size:13px;color:var(--text-dim);line-height:1.85;}
+
+/* ---------- MOBILE ---------- */
+@media(max-width:900px){
+  .sidebar{position:fixed;left:-270px;top:0;bottom:0;transition:left .2s ease;box-shadow:20px 0 40px rgba(0,0,0,0.4);}
+  .sidebar.open{left:0;}
+  .hamburger{display:flex;}
+  .content{padding:20px 16px 70px;}
+  .topbar{padding:14px 16px;}
+}
+
+/* ---------- PRINT ---------- */
+@media print{
+  .sidebar,.topbar,.hamburger,.btn,.day-nav,.month-tabs{display:none !important;}
+  body{background:#fff;color:#000;}
+  .card{background:#fff;border:1px solid #ccc;color:#000;break-inside:avoid;}
+  .view{display:none !important;}
+  .view.active{display:block !important;}
+  .content{max-width:100%;padding:0;}
+  .slot-detail,.topic-meta,.view-caption{color:#333;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">◆ mission control</div>
+      <div class="brand-title">ML Mastery<br>System</div>
+      <div class="brand-sub" id="brandSub">DAY 1 / 90</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Overview</div>
+      <div class="nav-item" data-view="dashboard"><span class="nav-dot"></span>Dashboard</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Schedule</div>
+      <div class="nav-item" data-view="daily"><span class="nav-dot"></span>Daily Schedule</div>
+      <div class="nav-item" data-view="weekly"><span class="nav-dot"></span>Weekly Schedule</div>
+      <div class="nav-item" data-view="roadmap"><span class="nav-dot"></span>3-Month Roadmap</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Learning Map</div>
+      <div class="nav-item" data-view="mlroadmap"><span class="nav-dot"></span>ML Roadmap</div>
+      <div class="nav-item" data-view="math"><span class="nav-dot"></span>Math Roadmap</div>
+      <div class="nav-item" data-view="projects"><span class="nav-dot"></span>Project Roadmap</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Memory</div>
+      <div class="nav-item" data-view="revision"><span class="nav-dot"></span>Revision Calendar</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Tracking</div>
+      <div class="nav-item" data-view="habits"><span class="nav-dot"></span>Habit Tracker</div>
+      <div class="nav-item" data-view="progress"><span class="nav-dot"></span>Progress Dashboard</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Journal</div>
+      <div class="nav-item" data-view="notes"><span class="nav-dot"></span>Notes</div>
+      <div class="nav-item" data-view="goals"><span class="nav-dot"></span>Goal Tracker</div>
+      <div class="nav-item" data-view="journal"><span class="nav-dot"></span>Reflection Journal</div>
+      <div class="nav-item" data-view="weeklyreview"><span class="nav-dot"></span>Weekly Review</div>
+      <div class="nav-item" data-view="monthlyreview"><span class="nav-dot"></span>Monthly Review</div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">More</div>
+      <div class="nav-item" data-view="resources"><span class="nav-dot"></span>Resources</div>
+    </div>
+
+    <div class="sidebar-foot">Everything here is saved locally in this browser.<br>Nothing is uploaded anywhere.</div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburgerBtn">☰</button>
+        <div>
+          <div class="view-title" id="viewTitle">Dashboard</div>
+          <div class="view-caption" id="viewCaption">—</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="pill">🔥 <b id="topbarStreak">0</b> day streak</span>
+        <span class="pill">📅 <b id="topbarPlanDay">1</b>/90</span>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+
+      <!-- DASHBOARD -->
+      <section class="view active" id="view-dashboard">
+        <div class="card">
+          <div class="eyebrow">About this plan</div>
+          <p class="section-desc" style="max-width:100%;">
+            Built for a CampusX 100-Days-of-ML learner continuing from <b>Day 31</b>, sleeping ~1:00 AM and waking ~7:00–7:30 AM,
+            with a fixed 6–7 PM tuition block. The remaining ~50 CampusX topics are paced across weekdays and alternate Saturdays —
+            at that rate the core syllabus wraps around week 9–10, leaving the rest of month 3 free for capstone projects, portfolio
+            polishing and interview prep instead of being rushed. Every topic automatically resurfaces for 24-hour, weekly and monthly
+            revision — you never have to plan revision by hand, just follow what today's view shows you.
+          </p>
+          <div class="field" style="max-width:260px;">
+            <label class="field-label">Plan start date</label>
+            <input type="date" id="startDateInput">
+          </div>
+        </div>
+
+        <div class="grid grid-4" id="dashStats" style="margin-top:16px;"></div>
+
+        <div class="grid grid-2" style="margin-top:16px;align-items:stretch;">
+          <div class="card">
+            <div class="eyebrow">Today at a glance</div>
+            <h2 class="section-title" id="dashTodayTitle">—</h2>
+            <div id="dashTodayBody"></div>
+            <button class="btn btn-accent btn-sm" style="margin-top:14px;" data-goto="daily">Open full daily schedule →</button>
+          </div>
+          <div class="card">
+            <div class="eyebrow">Memory orbit</div>
+            <h2 class="section-title" style="margin-bottom:12px;">Revision due today</h2>
+            <div class="orbit-wrap">
+              <div id="orbitSvgHolder"></div>
+              <div class="orbit-legend">
+                <div class="row"><span class="dot" style="background:var(--ml)"></span>24-hour ring</div>
+                <div class="row"><span class="dot" style="background:var(--rev)"></span>Weekly ring</div>
+                <div class="row"><span class="dot" style="background:var(--proj)"></span>Monthly ring</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <div class="eyebrow">Quick links</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn" data-goto="mlroadmap">ML Roadmap</button>
+            <button class="btn" data-goto="habits">Habit Tracker</button>
+            <button class="btn" data-goto="journal">Reflection Journal</button>
+            <button class="btn" data-goto="weeklyreview">Weekly Review</button>
+            <button class="btn btn-ghost" id="resetDataBtn" style="margin-left:auto;color:var(--danger);border-color:rgba(242,114,109,.35);">Reset all data</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DAILY -->
+      <section class="view" id="view-daily">
+        <div class="day-nav">
+          <button class="btn btn-sm" id="dayPrev">← Prev</button>
+          <button class="btn btn-sm" id="dayToday">Today</button>
+          <button class="btn btn-sm" id="dayNext">Next →</button>
+          <span class="pill" id="dayNavLabel" style="margin-left:auto;"></span>
+        </div>
+        <div class="card">
+          <div class="eyebrow" id="dailyType">Learning day</div>
+          <h2 class="section-title" id="dailyHeadline">—</h2>
+          <p class="section-desc" id="dailySub"></p>
+          <div class="timeline" id="dailyTimeline"></div>
+        </div>
+      </section>
+
+      <!-- WEEKLY -->
+      <section class="view" id="view-weekly">
+        <div class="day-nav">
+          <button class="btn btn-sm" id="weekPrev">← Prev week</button>
+          <button class="btn btn-sm" id="weekToday">This week</button>
+          <button class="btn btn-sm" id="weekNext">Next week →</button>
+          <span class="pill" id="weekNavLabel" style="margin-left:auto;"></span>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Weekly structure</div>
+          <p class="section-desc">Mon–Fri: one new topic + synced math + revision. Saturday: alternates between a normal learning day and a full Project Day. Sunday: no new content — weekly revision marathon, self-test, progress review and next-week planning.</p>
+          <div class="cal-grid" id="weeklyGrid" style="grid-template-columns:repeat(7,1fr);"></div>
+        </div>
+      </section>
+
+      <!-- 3-MONTH ROADMAP -->
+      <section class="view" id="view-roadmap">
+        <div class="card">
+          <div class="eyebrow">Full 90-day arc</div>
+          <h2 class="section-title">3-Month Roadmap</h2>
+          <p class="section-desc">Grouped by phase. Each row shows the plan-day and calendar date it lands on based on your start date above. Grey dates mean that slot fell on a Sunday/Saturday and was skipped forward automatically.</p>
+          <div id="roadmapPhases"></div>
+          <div class="divider"></div>
+          <div class="eyebrow">After the core syllabus</div>
+          <p class="section-desc" id="roadmapBuffer"></p>
+        </div>
+      </section>
+
+      <!-- ML ROADMAP -->
+      <section class="view" id="view-mlroadmap">
+        <div class="card">
+          <div class="eyebrow">Curriculum · Day 31 onward</div>
+          <h2 class="section-title">ML Roadmap</h2>
+          <p class="section-desc">Tick a topic once you can explain it without notes (Feynman-tested), not just once the video is watched. CampusX day numbers are approximate — the playlist occasionally reorders videos, so match by <i>topic name</i>, not number.</p>
+          <div id="mlRoadmapList"></div>
+        </div>
+      </section>
+
+      <!-- MATH ROADMAP -->
+      <section class="view" id="view-math">
+        <div class="card">
+          <div class="eyebrow">Synced, not separate</div>
+          <h2 class="section-title">Math Roadmap</h2>
+          <p class="section-desc">Every concept below is scheduled on the same day as the ML topic that needs it — you never learn math in a vacuum.</p>
+          <div id="mathRoadmapList"></div>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section class="view" id="view-projects">
+        <div class="card">
+          <div class="eyebrow">Build while you learn</div>
+          <h2 class="section-title">Project Roadmap</h2>
+          <p class="section-desc">Eight projects, increasing in difficulty, each unlocked once you've covered the topics it needs. Landed on your alternating Project Saturdays.</p>
+          <div class="grid grid-2" id="projectList"></div>
+        </div>
+      </section>
+
+      <!-- REVISION CALENDAR -->
+      <section class="view" id="view-revision">
+        <div class="card">
+          <div class="eyebrow">Spaced repetition, automated</div>
+          <h2 class="section-title">Revision Calendar</h2>
+          <p class="section-desc">Colour-coded: every topic you learn automatically reappears here at +1 day, +7 days and +30 days. Click a day to see exactly what's due.</p>
+          <div class="cal-legend" style="margin-bottom:14px;">
+            <span><i style="background:var(--ml)"></i>24-hour revision</span>
+            <span><i style="background:var(--rev)"></i>Weekly revision</span>
+            <span><i style="background:var(--proj)"></i>Monthly revision</span>
+            <span><i style="background:var(--math)"></i>New topic learned</span>
+          </div>
+          <div class="cal-grid" id="revisionCalDow"></div>
+          <div class="cal-grid" id="revisionCalGrid" style="margin-top:6px;"></div>
+          <div class="divider"></div>
+          <div id="revisionDayDetail" class="empty-note">Click any day above to see what's due.</div>
+        </div>
+      </section>
+
+      <!-- HABIT TRACKER -->
+      <section class="view" id="view-habits">
+        <div class="card">
+          <div class="eyebrow">Daily consistency</div>
+          <h2 class="section-title">Habit Tracker</h2>
+          <p class="section-desc">One row per day, one column per habit. Click a cell to toggle it.</p>
+          <div class="month-tabs" id="habitMonthTabs"></div>
+          <div class="habit-table-wrap"><table class="habit-table" id="habitTable"></table></div>
+        </div>
+      </section>
+
+      <!-- PROGRESS -->
+      <section class="view" id="view-progress">
+        <div class="card">
+          <div class="eyebrow">The numbers</div>
+          <h2 class="section-title">Progress Dashboard</h2>
+          <div class="grid grid-4" id="progressStats" style="margin-top:14px;"></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Weekly score</div>
+          <h2 class="section-title" style="font-size:16px;">Habit completion, week by week</h2>
+          <div id="weeklyScoreChart" style="margin-top:10px;"></div>
+        </div>
+      </section>
+
+      <!-- NOTES -->
+      <section class="view" id="view-notes">
+        <div class="card">
+          <div class="eyebrow">Feynman notes</div>
+          <h2 class="section-title">Notes</h2>
+          <p class="section-desc">Pick a topic and explain it in your own words — as if teaching a beginner. If you can't, you haven't learned it yet.</p>
+          <div class="field" style="max-width:420px;">
+            <label class="field-label">Topic</label>
+            <select id="notesTopicSelect"></select>
+          </div>
+          <div class="field">
+            <textarea id="notesTextarea" rows="12" placeholder="Explain this concept in plain words, as if to a beginner..."></textarea>
+          </div>
+          <div class="empty-note">Saved automatically as you type.</div>
+        </div>
+      </section>
+
+      <!-- GOALS -->
+      <section class="view" id="view-goals">
+        <div class="card">
+          <div class="eyebrow">Keep the target in view</div>
+          <h2 class="section-title">Goal Tracker</h2>
+          <div style="display:flex;gap:10px;margin-bottom:6px;">
+            <input type="text" id="goalInput" placeholder="Add a goal, e.g. 'Finish Ridge/Lasso by Sunday'">
+            <button class="btn btn-accent" id="goalAddBtn">Add</button>
+          </div>
+          <div id="goalList" style="margin-top:10px;"></div>
+        </div>
+      </section>
+
+      <!-- JOURNAL -->
+      <section class="view" id="view-journal">
+        <div class="card">
+          <div class="eyebrow">Reflection</div>
+          <h2 class="section-title">Reflection Journal</h2>
+          <div class="field" style="max-width:220px;">
+            <label class="field-label">Date</label>
+            <input type="date" id="journalDate">
+          </div>
+          <div class="field">
+            <label class="field-label">What went well today?</label>
+            <textarea id="journalWell" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">What was hard / where did you lose focus?</label>
+            <textarea id="journalHard" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">One thing to remember tomorrow</label>
+            <textarea id="journalRemember" rows="2"></textarea>
+          </div>
+          <div class="empty-note">Saved automatically as you type.</div>
+        </div>
+      </section>
+
+      <!-- WEEKLY REVIEW -->
+      <section class="view" id="view-weeklyreview">
+        <div class="card">
+          <div class="eyebrow">Sunday ritual</div>
+          <h2 class="section-title" id="weeklyReviewTitle">Weekly Review</h2>
+          <div class="field">
+            <label class="field-label">Revision completion this week (0–100%)</label>
+            <input type="number" id="wrCompletion" min="0" max="100">
+          </div>
+          <div class="field">
+            <label class="field-label">What worked well this week?</label>
+            <textarea id="wrWorked" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">What didn't work / what slipped?</label>
+            <textarea id="wrNotWorked" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">Plan for next week</label>
+            <textarea id="wrNextPlan" rows="3"></textarea>
+          </div>
+          <div class="empty-note">Saved automatically as you type. Switch weeks from the Daily or Roadmap view.</div>
+        </div>
+      </section>
+
+      <!-- MONTHLY REVIEW -->
+      <section class="view" id="view-monthlyreview">
+        <div class="card">
+          <div class="eyebrow">Zoom out</div>
+          <h2 class="section-title" id="monthlyReviewTitle">Monthly Review</h2>
+          <div class="field">
+            <label class="field-label">Biggest win this month</label>
+            <textarea id="mrWin" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">Biggest challenge</label>
+            <textarea id="mrChallenge" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">Topics to revisit before moving on</label>
+            <textarea id="mrRevisit" rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label class="field-label">Plan for next month</label>
+            <textarea id="mrNextPlan" rows="3"></textarea>
+          </div>
+          <div class="empty-note">Saved automatically as you type.</div>
+        </div>
+      </section>
+
+      <!-- RESOURCES -->
+      <section class="view" id="view-resources">
+        <div class="card">
+          <div class="eyebrow">Curated, not exhaustive</div>
+          <h2 class="section-title">Resources</h2>
+          <div class="grid grid-2" id="resourcesGrid"></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   DATA: CURRICULUM
+============================================================ */
+var P = {
+  P1:'Feature Engineering & Missing Data',
+  P2:'Outliers & Dimensionality Reduction',
+  P3:'Regression & Optimization',
+  P4:'Classification',
+  P5:'Ensemble Learning',
+  P6:'Unsupervised Learning',
+  P7:'Model Selection & Deployment'
+};
+
+var CURRICULUM = [
+{d:31,t:'Power Transformer',p:'P1',m:['Box-Cox & Yeo-Johnson transforms','Skewness'],pr:['pandas','sklearn'],h:false},
+{d:32,t:'Binning & Binarization',p:'P1',m:['Quantiles'],pr:['pandas'],h:false},
+{d:33,t:'Handling Mixed Variables',p:'P1',m:[],pr:['pandas'],h:false},
+{d:34,t:'Handling Date & Time Features',p:'P1',m:[],pr:['pandas'],h:false},
+{d:35,t:'Complete Case Analysis',p:'P1',m:['MCAR / MAR / MNAR intuition'],pr:['pandas'],h:false},
+{d:36,t:'Imputing Numerical Data',p:'P1',m:['Mean, median, variance'],pr:['sklearn'],h:false},
+{d:37,t:'Handling Missing Categorical Data',p:'P1',m:[],pr:['pandas'],h:false},
+{d:38,t:'Missing Indicator',p:'P1',m:[],pr:['sklearn'],h:false},
+{d:39,t:'KNN Imputer',p:'P1',m:['Euclidean distance'],pr:['sklearn'],h:true},
+{d:40,t:'Iterative Imputer (MICE)',p:'P1',m:['Regression intuition'],pr:['sklearn'],h:false},
+{d:null,t:'Detecting Outliers Visually',p:'P2',m:['Normal distribution basics'],pr:['seaborn'],h:false},
+{d:42,t:'Outlier Removal — Z-score Method',p:'P2',m:['Mean, std. dev., z-score'],pr:['numpy'],h:false},
+{d:43,t:'Outlier Removal — IQR Method',p:'P2',m:['Quartiles, IQR'],pr:['pandas'],h:false},
+{d:44,t:'Outlier Detection — Percentiles (Winsorization)',p:'P2',m:['Percentiles'],pr:['numpy'],h:false},
+{d:45,t:'Feature Construction & Splitting',p:'P2',m:[],pr:['pandas'],h:false},
+{d:null,t:'Curse of Dimensionality',p:'P2',m:['High-dimensional distance intuition'],pr:[],h:false},
+{d:47,t:'Principal Component Analysis (PCA)',p:'P2',m:['Eigenvalues & eigenvectors','Covariance matrix','Variance'],pr:['numpy','sklearn'],h:true},
+{d:48,t:'Simple Linear Regression',p:'P3',m:['Slope-intercept form','Least squares','Closed-form OLS'],pr:['sklearn'],h:true},
+{d:49,t:'Regression Metrics (MAE, MSE, RMSE, R²)',p:'P3',m:['Summation notation'],pr:['sklearn'],h:false},
+{d:50,t:'Multiple Linear Regression',p:'P3',m:['Vectors, matrices, dot product'],pr:['numpy'],h:false},
+{d:51,t:'Gradient Descent (Batch)',p:'P3',m:['Derivatives & partial derivatives','Learning rate'],pr:['numpy'],h:true},
+{d:52,t:'Types of Gradient Descent',p:'P3',m:['Convergence intuition'],pr:['numpy'],h:false},
+{d:53,t:'Polynomial Regression',p:'P3',m:['Feature transformation','Overfitting intuition'],pr:['sklearn'],h:false},
+{d:null,t:'Bias-Variance Tradeoff',p:'P3',m:['Bias/variance decomposition'],pr:[],h:false},
+{d:55,t:'Ridge Regression',p:'P3',m:['L2 norm / penalty term'],pr:['sklearn'],h:true},
+{d:56,t:'Lasso Regression',p:'P3',m:['L1 norm, sparsity'],pr:['sklearn'],h:false},
+{d:57,t:'ElasticNet Regression',p:'P3',m:['Combined L1 + L2'],pr:['sklearn'],h:false},
+{d:58,t:'Logistic Regression',p:'P4',m:['Sigmoid function','Log-odds','Maximum likelihood'],pr:['sklearn'],h:true},
+{d:59,t:'Classification Metrics',p:'P4',m:['Ratios & probability'],pr:['sklearn'],h:false},
+{d:60,t:'Logistic Regression — Multiclass & Softmax',p:'P4',m:['Softmax function'],pr:['sklearn'],h:false},
+{d:null,t:'Decision Trees — How Splits Work',p:'P4',m:['Entropy, Gini impurity'],pr:['sklearn'],h:false},
+{d:null,t:'Decision Trees — Hyperparameters & Overfitting',p:'P4',m:['Information gain'],pr:['sklearn'],h:false},
+{d:null,t:'Support Vector Machines — Margins',p:'P4',m:['Hyperplanes, margins'],pr:['sklearn'],h:false},
+{d:null,t:'Support Vector Machines — Kernels',p:'P4',m:['Kernel trick'],pr:['sklearn'],h:true},
+{d:65,t:'Random Forest',p:'P5',m:['Bootstrap sampling intuition'],pr:['sklearn'],h:false},
+{d:null,t:'Bagging',p:'P5',m:['Bootstrap aggregation, variance reduction'],pr:['sklearn'],h:false},
+{d:66,t:'AdaBoost',p:'P5',m:['Weighted error, weak learners'],pr:['sklearn'],h:false},
+{d:68,t:'Stacking & Blending',p:'P5',m:['Meta-model intuition'],pr:['sklearn'],h:false},
+{d:null,t:'Gradient Boosting',p:'P5',m:['Residuals, additive modeling'],pr:['sklearn'],h:true},
+{d:null,t:'XGBoost',p:'P5',m:['Regularized objective intuition'],pr:['xgboost'],h:false},
+{d:null,t:'K-Means Clustering',p:'P6',m:['Centroids, Euclidean distance, WCSS'],pr:['sklearn'],h:false},
+{d:null,t:'Hierarchical Clustering',p:'P6',m:['Dendrograms, linkage methods'],pr:['scipy'],h:false},
+{d:null,t:'DBSCAN',p:'P6',m:['Density, epsilon-neighborhood'],pr:['sklearn'],h:false},
+{d:null,t:'Silhouette Score & Clustering Evaluation',p:'P6',m:['Cohesion/separation ratio'],pr:['sklearn'],h:false},
+{d:null,t:'t-SNE for Visualization',p:'P6',m:['Nonlinear embedding intuition'],pr:['sklearn'],h:false},
+{d:null,t:'Cross-Validation (K-Fold)',p:'P7',m:['K-fold averaging'],pr:['sklearn'],h:false},
+{d:null,t:'Hyperparameter Tuning — Grid & Randomized Search',p:'P7',m:['Search space intuition'],pr:['sklearn'],h:false},
+{d:null,t:'Handling Imbalanced Data — SMOTE',p:'P7',m:['Oversampling intuition'],pr:['imblearn'],h:false},
+{d:null,t:'Model Deployment Basics — Streamlit / Flask',p:'P7',m:[],pr:['streamlit'],h:false},
+{d:null,t:'End-to-End ML Workflow Review',p:'P7',m:[],pr:[],h:false}
+];
+
+var PROJECTS = [
+{t:'Data Cleaning Mini-Project', after:9, goal:'Take a messy raw CSV and turn it into a fully cleaned, analysis-ready dataset.', skills:['pandas','missing data handling','outlier treatment'], hours:6, tech:['Python','pandas','numpy'], deliverables:['Cleaned CSV','Before/after cleaning notebook']},
+{t:'Full EDA Report', after:14, goal:'Run a complete exploratory data analysis on a real dataset and present the findings visually — similar to the Titanic EDA workflow, on a new dataset.', skills:['univariate/bivariate analysis','storytelling with data'], hours:8, tech:['pandas','matplotlib','seaborn'], deliverables:['EDA notebook','Exported PDF report']},
+{t:'End-to-End Regression Project', after:26, goal:'Predict a continuous target (e.g. house prices) end-to-end: cleaning → feature engineering → model → evaluation.', skills:['regression pipelines','regularization','metrics'], hours:12, tech:['scikit-learn','pandas'], deliverables:['Pipeline notebook','Model comparison table']},
+{t:'Classification Project — Churn / Loan Default', after:33, goal:'Build a full classification pipeline, including class-imbalance handling and threshold tuning.', skills:['classification metrics','logistic regression','decision trees'], hours:12, tech:['scikit-learn'], deliverables:['Trained classifier','Confusion matrix + ROC report']},
+{t:'Ensemble Mini-Competition (Titanic, Advanced)', after:39, goal:'Revisit the Titanic dataset with ensemble models and push for a meaningfully higher accuracy than your first pass.', skills:['random forest','boosting','stacking'], hours:10, tech:['scikit-learn','xgboost'], deliverables:['Kaggle submission','Model comparison write-up']},
+{t:'Customer Segmentation Project', after:44, goal:'Cluster customers by behaviour and profile each resulting segment.', skills:['k-means','clustering evaluation','PCA for visualization'], hours:10, tech:['scikit-learn'], deliverables:['Segment profiles','2D cluster visualization']},
+{t:'Capstone: Deployed ML Web App', after:49, goal:'Take one earlier project and ship it as a small interactive app someone else could actually use.', skills:['deployment','packaging','basic UI'], hours:15, tech:['Streamlit','scikit-learn'], deliverables:['Working local/live app','GitHub repo with README']},
+{t:'Portfolio Polish + Second Capstone', after:49, goal:'Clean up every project repo with a proper README, then build one more capstone of your choice (spam classifier or a simple recommender system).', skills:['documentation','portfolio building'], hours:15, tech:['Git','GitHub'], deliverables:['Polished GitHub profile','One additional capstone project']}
+];
+
+var HABIT_KEYS = [
+['campusx','CampusX'],['math','Math'],['coding','Coding'],['revision','Revision'],
+['project','Project'],['exercise','Exercise'],['reading','Reading'],['sleep','Sleep'],
+['focus','Focus'],['nodist','No Distraction'],['water','Water'],['meditation','Meditation']
+];
+
+var DOW_LABELS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var PLAN_DAYS = 90;
+
+/* ============================================================
+   STATE
+============================================================ */
+var STORE_KEY = 'kunalMLMasterySystem_v1';
+var state = null;
+
+function defaultState(){
+  return { startDate:null, habits:{}, hours:{}, topicDone:{}, projectDone:{},
+           notes:{}, goals:[], journal:{}, weeklyReview:{}, monthlyReview:{}, viewedDayOffset:0 };
+}
+function loadState(){
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return defaultState();
+    var parsed = JSON.parse(raw);
+    var d = defaultState();
+    for(var k in d){ if(parsed[k]===undefined) parsed[k]=d[k]; }
+    return parsed;
+  }catch(e){ return defaultState(); }
+}
+function saveState(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){ /* storage unavailable, continue in-memory */ }
+}
+
+/* ============================================================
+   DATE HELPERS
+============================================================ */
+function pad(n){ return n<10 ? '0'+n : ''+n; }
+function toISO(dt){ return dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate()); }
+function fromISO(s){ var p=s.split('-'); return new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2])); }
+function todayISO(){ return toISO(new Date()); }
+function addDays(dt,n){ var d=new Date(dt); d.setDate(d.getDate()+n); return d; }
+function fmtNice(dt){ var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return dt.getDate()+' '+months[dt.getMonth()]+' '+dt.getFullYear(); }
+
+function getStartDate(){
+  if(!state.startDate){ state.startDate = todayISO(); saveState(); }
+  return fromISO(state.startDate);
+}
+function dateForPlanDay(n){ return addDays(getStartDate(), n-1); }
+function planDayForDate(dt){
+  var start = getStartDate();
+  var diff = Math.round((new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()) - new Date(start.getFullYear(),start.getMonth(),start.getDate())) / 86400000);
+  return diff+1;
+}
+
+/* ============================================================
+   SCHEDULER
+============================================================ */
+var scheduleCache = null;
+function buildSchedule(){
+  var flatSlots = [];
+  CURRICULUM.forEach(function(topic, idx){
+    if(topic.h){ flatSlots.push({topic:topic, idx:idx, part:1}); flatSlots.push({topic:topic, idx:idx, part:2}); }
+    else { flatSlots.push({topic:topic, idx:idx, part:0}); }
+  });
+  var schedule = [];
+  var slotPtr = 0, projPtr = 0, satCount = 0;
+  var learnedDay = {}; // topicIdx -> plan day fully learned
+
+  for(var day=1; day<=PLAN_DAYS; day++){
+    var date = dateForPlanDay(day);
+    var dow = date.getDay();
+    var entry = { day:day, date:date, dow:dow, type:null, slot:null, project:null };
+
+    if(dow===0){
+      entry.type='review';
+    } else if(dow===6){
+      satCount++;
+      if(satCount % 2 === 0 && projPtr < PROJECTS.length){
+        entry.type='project'; entry.project = PROJECTS[projPtr]; entry.projectIdx = projPtr; projPtr++;
+      } else if(slotPtr < flatSlots.length){
+        entry.type='learning'; entry.slot = flatSlots[slotPtr]; slotPtr++;
+      } else { entry.type='buffer'; }
+    } else {
+      if(slotPtr < flatSlots.length){
+        entry.type='learning'; entry.slot = flatSlots[slotPtr]; slotPtr++;
+      } else { entry.type='buffer'; }
+    }
+
+    if(entry.type==='learning' && (entry.slot.part===0 || entry.slot.part===2)){
+      learnedDay[entry.slot.idx] = day;
+    }
+    schedule.push(entry);
+  }
+
+  // revision map: day -> [{idx, kind}]
+  var revisionMap = {};
+  function pushRev(day, idx, kind){
+    if(day<1 || day>PLAN_DAYS) return;
+    if(!revisionMap[day]) revisionMap[day]=[];
+    revisionMap[day].push({idx:idx, kind:kind});
+  }
+  Object.keys(learnedDay).forEach(function(k){
+    var idx = parseInt(k), ld = learnedDay[k];
+    pushRev(ld+1, idx, '24h');
+    pushRev(ld+7, idx, 'week');
+    pushRev(ld+30, idx, 'month');
+  });
+
+  // interleaving on review (Sunday) days: pull 2 older topics deterministically
+  var learnedIdxSorted = Object.keys(learnedDay).map(Number).sort(function(a,b){return learnedDay[a]-learnedDay[b];});
+  schedule.forEach(function(entry){
+    if(entry.type==='review'){
+      var eligible = learnedIdxSorted.filter(function(idx){ return learnedDay[idx] <= entry.day-7; });
+      if(eligible.length>0){
+        var pick1 = eligible[(entry.day*3) % eligible.length];
+        var pick2 = eligible[(entry.day*7+1) % eligible.length];
+        var already = (revisionMap[entry.day]||[]).map(function(r){return r.idx;});
+        [pick1,pick2].forEach(function(idx){
+          if(already.indexOf(idx)===-1){ pushRev(entry.day, idx, 'interleave'); already.push(idx); }
+        });
+      }
+    }
+  });
+
+  return { schedule:schedule, revisionMap:revisionMap, learnedDay:learnedDay,
+           leftoverTopics: flatSlots.length-slotPtr, leftoverProjects: PROJECTS.length-projPtr,
+           lastContentDay: (function(){ var m=0; Object.values(learnedDay).forEach(function(v){ if(v>m) m=v; }); return m; })() };
+}
+function getSchedule(){ if(!scheduleCache) scheduleCache = buildSchedule(); return scheduleCache; }
+function invalidateSchedule(){ scheduleCache = null; }
+
+function entryForDay(day){
+  var sc = getSchedule();
+  if(day<1) day=1; if(day>PLAN_DAYS) day=PLAN_DAYS;
+  return sc.schedule[day-1];
+}
+
+/* ============================================================
+   TIME BLOCK TEMPLATES
+============================================================ */
+var LEARN_TPL = [
+ ['06:45–07:15','Wake • Hydrate • No Phone','routine'],
+ ['07:15–07:30','Warm-up: recall yesterday in one line','recall'],
+ ['07:30–08:30','Math Block','math'],
+ ['08:30–08:40','Break — stretch, water','break'],
+ ['08:40–10:10','Deep Work I — CampusX Video + Notes','newtopic'],
+ ['10:10–10:25','Break — move, water, no screens','break'],
+ ['10:25–11:55','Deep Work II — Hands-on Coding','coding'],
+ ['11:55–12:30','Active Recall / Blurting','recall2'],
+ ['12:30–13:30','Lunch + Rest','rest'],
+ ['13:30–14:15','24-Hour Revision','revision24'],
+ ['14:15–14:30','Break','break'],
+ ['14:30–15:30','Practice — NumPy / Pandas / Matplotlib / Seaborn / Sklearn','practice'],
+ ['15:30–16:30','Project Work','project'],
+ ['16:30–17:30','Free / Exercise / Buffer','free'],
+ ['17:30–18:00','Get Ready','routine'],
+ ['18:00–19:00','Tuition Class','fixed'],
+ ['19:00–19:30','Dinner Break','break'],
+ ['19:30–20:15','Light Revision — Weekly / Monthly + Flashcards','revisionlight'],
+ ['20:15–20:45','Reading — HOML / ISLP','reading'],
+ ['20:45–21:15','Free Time / Hobby','free'],
+ ['21:15–21:30','Daily Shutdown — tracker, journal, plan tomorrow','shutdown']
+];
+var PROJECT_TPL = [
+ ['07:00–07:30','Wake • Hydrate','routine'],
+ ['07:30–08:00','Plan today\u2019s build — break the project into tasks','planproj'],
+ ['08:00–10:00','Project Build Block I','projectday'],
+ ['10:00–10:15','Break','break'],
+ ['10:15–12:15','Project Build Block II','projectday'],
+ ['12:15–13:15','Lunch','rest'],
+ ['13:15–14:45','Project Build Block III','projectday'],
+ ['14:45–15:00','Break','break'],
+ ['15:00–16:00','Weekly Practice Catch-up','practice'],
+ ['16:00–17:30','Free / Exercise','free'],
+ ['17:30–18:00','Get Ready','routine'],
+ ['18:00–19:00','Tuition Class','fixed'],
+ ['19:00–20:00','Dinner + Free','free'],
+ ['20:00–20:45','Document progress — README / notes update','reading'],
+ ['20:45–21:15','Daily Shutdown','shutdown']
+];
+var REVIEW_TPL = [
+ ['07:30–08:00','Wake • Slow Start','routine'],
+ ['08:00–09:30','Weekly Revision Marathon — interleaved recall across the week','revisionweek'],
+ ['09:30–09:45','Break','break'],
+ ['09:45–10:45','Self-Test — quiz yourself on the week\u2019s topics','selftest'],
+ ['10:45–11:30','Feynman Session — explain the hardest concept out loud','feynman'],
+ ['11:30–12:30','Monthly Revision (if due)','revisionmonth'],
+ ['12:30–14:00','Lunch + Long Break','rest'],
+ ['14:00–15:00','Progress Review — update dashboard & streaks','progressreview'],
+ ['15:00–15:45','Plan Next Week','planweek'],
+ ['15:45–17:30','Free Time / Hobby / Rest','free'],
+ ['17:30–19:00','Optional light reading / catch-up','reading'],
+ ['19:00–20:00','Dinner + Free Time','free'],
+ ['20:00–20:30','Fill in this week\u2019s Weekly Review','weeklyreviewlink']
+];
+var BUFFER_TPL = [
+ ['06:45–07:15','Wake • Hydrate • No Phone','routine'],
+ ['07:15–07:30','Warm-up: recall yesterday in one line','recall'],
+ ['07:30–08:30','Deep Revision — pick your shakiest math topic','mathbuffer'],
+ ['08:30–08:40','Break','break'],
+ ['08:40–10:10','Deep Work — revisit a weak topic OR interview-style Qs','buffertopic'],
+ ['10:10–10:25','Break','break'],
+ ['10:25–11:55','Portfolio / Capstone Work','coding'],
+ ['11:55–12:30','Mock Interview Q&A (self or peer)','recall2'],
+ ['12:30–13:30','Lunch + Rest','rest'],
+ ['13:30–14:15','Revision Due Today','revision24'],
+ ['14:15–14:30','Break','break'],
+ ['14:30–15:30','SQL / DSA-lite Practice (interview prep)','practice'],
+ ['15:30–16:30','Project Work','project'],
+ ['16:30–17:30','Free / Exercise','free'],
+ ['17:30–18:00','Get Ready','routine'],
+ ['18:00–19:00','Tuition Class','fixed'],
+ ['19:00–19:30','Dinner Break','break'],
+ ['19:30–20:15','Light Revision + Flashcards','revisionlight'],
+ ['20:15–20:45','Reading — HOML / ISLP','reading'],
+ ['20:45–21:15','Free Time / Hobby','free'],
+ ['21:15–21:30','Daily Shutdown','shutdown']
+];
+
+function revsForDay(day, kindFilter){
+  var sc = getSchedule();
+  var list = sc.revisionMap[day] || [];
+  if(kindFilter) list = list.filter(function(r){ return kindFilter.indexOf(r.kind)!==-1; });
+  return list;
+}
+function topicLabel(idx){
+  var t = CURRICULUM[idx];
+  return t.t + (t.d ? ' (CampusX ~Day '+t.d+')' : '');
+}
+
+function dynamicContentFor(entry, tag){
+  var sc = getSchedule();
+  if(tag==='math'){
+    if(entry.type==='learning' && entry.slot.topic.m.length){
+      return entry.slot.topic.m.join(' • ');
+    }
+    return 'No new math today — pick one shaky concept from the Math Roadmap and re-derive it from scratch.';
+  }
+  if(tag==='newtopic'){
+    if(entry.type==='learning'){
+      var t = entry.slot.topic;
+      var partLabel = entry.slot.part===1 ? ' — Part 1: watch + take Feynman-style notes' : (entry.slot.part===2 ? ' — Part 2: continue / rewatch the tricky bits' : '');
+      return (t.d ? 'CampusX Day '+t.d+': ' : 'CampusX (next in series): ') + t.t + partLabel;
+    }
+    return '—';
+  }
+  if(tag==='coding'){
+    if(entry.type==='learning'){
+      return 'Implement "'+entry.slot.topic.t+'" in a fresh notebook — from scratch where possible, then with '+(entry.slot.topic.pr.join(', ')||'the relevant library')+'.';
+    }
+    return 'Continue your current project increment.';
+  }
+  if(tag==='revision24'){
+    var r24 = revsForDay(entry.day, ['24h']);
+    if(!r24.length) return 'Nothing due for 24-hour revision today. Use this block for extra practice problems.';
+    return r24.map(function(r){ return '🔁 '+topicLabel(r.idx); }).join('<br>');
+  }
+  if(tag==='revisionlight'){
+    var rw = revsForDay(entry.day, ['week','month']);
+    if(!rw.length) return 'No weekly/monthly revision due — review your notes for the current phase instead.';
+    return rw.map(function(r){ return (r.kind==='week'?'📅 Weekly: ':'🗓 Monthly: ')+topicLabel(r.idx); }).join('<br>');
+  }
+  if(tag==='revisionweek'){
+    var r = revsForDay(entry.day, ['week','interleave']);
+    if(!r.length) return 'Review everything you learned since last Sunday, active-recall style: close your notes and write down what you remember, then check.';
+    return r.map(function(x){ return (x.kind==='interleave'?'🔀 Interleaved: ':'📅 Weekly: ')+topicLabel(x.idx); }).join('<br>');
+  }
+  if(tag==='revisionmonth'){
+    var rm = revsForDay(entry.day, ['month']);
+    if(!rm.length) return 'No monthly revision due this week.';
+    return rm.map(function(x){ return '🗓 '+topicLabel(x.idx); }).join('<br>');
+  }
+  if(tag==='project' || tag==='projectday'){
+    if(entry.type==='project') return entry.project.t+' — '+entry.project.goal;
+    var doneCount = Object.keys(state.projectDone).length;
+    var next = PROJECTS[doneCount] || PROJECTS[PROJECTS.length-1];
+    return 'Increment progress on: '+next.t;
+  }
+  if(tag==='mathbuffer'){
+    return 'The core CampusX syllabus is done — use this block to re-derive a math concept you were shaky on (check the Math Roadmap for anything unchecked).';
+  }
+  if(tag==='buffertopic'){
+    return 'No new CampusX topic left to learn — revisit your weakest concept in depth, or start working through common ML interview questions.';
+  }
+  return '';
+}
+
+function templateFor(entry){
+  if(entry.type==='project') return PROJECT_TPL;
+  if(entry.type==='review') return REVIEW_TPL;
+  if(entry.type==='buffer') return BUFFER_TPL;
+  return LEARN_TPL;
+}
+var DYNAMIC_TAGS = ['math','newtopic','coding','revision24','revisionlight','revisionweek','revisionmonth','project','projectday','mathbuffer','buffertopic'];
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+var VIEW_TITLES = {
+  dashboard:['Dashboard','Your command center'],
+  daily:['Daily Schedule','Time-blocked, built around your sleep and tuition schedule'],
+  weekly:['Weekly Schedule','Mon–Fri learning, Sat alternates, Sun is revision-only'],
+  roadmap:['3-Month Roadmap','The whole arc, phase by phase'],
+  mlroadmap:['ML Roadmap','Every topic from Day 31 onward'],
+  math:['Math Roadmap','Synced to the ML topic that needs it'],
+  projects:['Project Roadmap','8 projects, increasing difficulty'],
+  revision:['Revision Calendar','24-hour, weekly and monthly — automatically'],
+  habits:['Habit Tracker','One row per day'],
+  progress:['Progress Dashboard','The numbers behind the plan'],
+  notes:['Notes','Feynman-style, topic by topic'],
+  goals:['Goal Tracker','Short-term targets'],
+  journal:['Reflection Journal','Two minutes, every night'],
+  weeklyreview:['Weekly Review','Every Sunday'],
+  monthlyreview:['Monthly Review','Every 30 days'],
+  resources:['Resources','Books, docs, channels, datasets, repos']
+};
+
+function setActiveView(name){
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  var el = document.getElementById('view-'+name);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.toggle('active', n.getAttribute('data-view')===name); });
+  var titles = VIEW_TITLES[name] || [name,''];
+  document.getElementById('viewTitle').textContent = titles[0];
+  document.getElementById('viewCaption').textContent = titles[1];
+  document.getElementById('sidebar').classList.remove('open');
+  renderView(name);
+  window.scrollTo(0,0);
+}
+
+function renderView(name){
+  if(name==='dashboard') renderDashboard();
+  else if(name==='daily') renderDaily();
+  else if(name==='weekly') renderWeekly();
+  else if(name==='roadmap') renderRoadmap();
+  else if(name==='mlroadmap') renderMLRoadmap();
+  else if(name==='math') renderMathRoadmap();
+  else if(name==='projects') renderProjects();
+  else if(name==='revision') renderRevisionCalendar();
+  else if(name==='habits') renderHabits();
+  else if(name==='progress') renderProgress();
+  else if(name==='notes') renderNotes();
+  else if(name==='goals') renderGoals();
+  else if(name==='journal') renderJournal();
+  else if(name==='weeklyreview') renderWeeklyReview();
+  else if(name==='monthlyreview') renderMonthlyReview();
+  else if(name==='resources') renderResources();
+}
+
+/* ============================================================
+   TOPBAR
+============================================================ */
+function refreshTopbar(){
+  var today = new Date();
+  var day = planDayForDate(today);
+  var clamped = Math.max(1, Math.min(PLAN_DAYS, day));
+  document.getElementById('topbarPlanDay').textContent = clamped;
+  document.getElementById('brandSub').textContent = 'DAY '+clamped+' / '+PLAN_DAYS;
+  document.getElementById('topbarStreak').textContent = computeStreak('revision');
+}
+function computeStreak(habitKey){
+  var d = new Date(); var streak=0;
+  for(var i=0;i<400;i++){
+    var iso = toISO(addDays(d,-i));
+    var h = state.habits[iso];
+    if(h && h[habitKey]) streak++; else break;
+  }
+  return streak;
+}
+
+/* ============================================================
+   RENDER: DASHBOARD
+============================================================ */
+function renderDashboard(){
+  document.getElementById('startDateInput').value = state.startDate || todayISO();
+  var today = new Date();
+  var day = Math.max(1, Math.min(PLAN_DAYS, planDayForDate(today)));
+  var entry = entryForDay(day);
+  var sc = getSchedule();
+
+  var topicsMastered = Object.keys(state.topicDone).filter(function(k){return state.topicDone[k];}).length;
+  var projectsDone = Object.keys(state.projectDone).filter(function(k){return state.projectDone[k];}).length;
+  var revStreak = computeStreak('revision');
+  var weeklyPct = habitScoreForRange(addDays(today,-6), today);
+
+  var stats = [
+    ['Plan Day', day+' / '+PLAN_DAYS, day/PLAN_DAYS, 'var(--ml)'],
+    ['Topics Mastered', topicsMastered+' / '+CURRICULUM.length, topicsMastered/CURRICULUM.length, 'var(--math)'],
+    ['Projects Done', projectsDone+' / '+PROJECTS.length, projectsDone/PROJECTS.length, 'var(--proj)'],
+    ['This Week\u2019s Habit Score', weeklyPct+'%', weeklyPct/100, 'var(--rev)']
+  ];
+  document.getElementById('dashStats').innerHTML = stats.map(function(s){
+    return '<div class="card stat-card"><div class="stat-label">'+s[0]+'</div><div class="stat-num">'+s[1]+'</div>'+
+           '<div class="stat-bar"><i style="width:'+Math.round(s[2]*100)+'%;background:'+s[3]+'"></i></div></div>';
+  }).join('');
+
+  document.getElementById('dashTodayTitle').textContent = fmtNice(today)+' · '+labelForType(entry.type);
+  var body = '';
+  if(entry.type==='learning'){
+    body += '<div class="slot-detail"><b style="color:var(--text)">New:</b> '+dynamicContentFor(entry,'newtopic')+'</div>';
+    body += '<div class="slot-detail" style="margin-top:6px;"><b style="color:var(--text)">Math:</b> '+dynamicContentFor(entry,'math')+'</div>';
+  } else if(entry.type==='project'){
+    body += '<div class="slot-detail"><b style="color:var(--text)">Project Day:</b> '+entry.project.t+'</div>';
+  } else if(entry.type==='review'){
+    body += '<div class="slot-detail">Weekly revision + self-test + planning. No new content today.</div>';
+  } else {
+    body += '<div class="slot-detail">Core syllabus complete — capstone / interview-prep day.</div>';
+  }
+  var r24 = revsForDay(day, ['24h']);
+  var rw = revsForDay(day, ['week','month','interleave']);
+  body += '<div class="slot-tags" style="margin-top:10px;">';
+  if(r24.length) body += '<span class="tag tag-ml">24h: '+r24.length+'</span>';
+  if(rw.length) body += '<span class="tag tag-rev">Wk/Mo/Interleave: '+rw.length+'</span>';
+  body += '</div>';
+  document.getElementById('dashTodayBody').innerHTML = body;
+
+  renderOrbit(r24.length, rw.filter(function(r){return r.kind==='week'||r.kind==='interleave';}).length, rw.filter(function(r){return r.kind==='month';}).length);
+}
+
+function labelForType(t){
+  return t==='learning'?'Learning Day':t==='project'?'Project Day':t==='review'?'Weekly Review Day':'Capstone / Buffer Day';
+}
+
+function renderOrbit(n24, nWeek, nMonth){
+  var size=180, cx=size/2, cy=size/2;
+  function ring(r,color,n,offset){
+    var dots='';
+    var count = Math.min(n,8);
+    for(var i=0;i<count;i++){
+      var ang = (Math.PI*2*i/Math.max(count,1)) + offset;
+      var x = cx + r*Math.cos(ang), y = cy + r*Math.sin(ang);
+      dots += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="4" fill="'+color+'"/>';
+    }
+    return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-opacity="0.25" stroke-width="1.5"/>' + dots;
+  }
+  var svg = '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'+
+    ring(74,'#c792ea',nMonth,0.4)+
+    ring(52,'#63d9a8',nWeek,1.1)+
+    ring(30,'#5b8def',n24,2.0)+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#e9edf6"/>'+
+    '</svg>';
+  document.getElementById('orbitSvgHolder').innerHTML = svg;
+}
+
+/* ============================================================
+   RENDER: DAILY
+============================================================ */
+function renderDaily(){
+  var today = new Date();
+  var baseDay = Math.max(1, Math.min(PLAN_DAYS, planDayForDate(today)));
+  var day = Math.max(1, Math.min(PLAN_DAYS, baseDay + state.viewedDayOffset));
+  var entry = entryForDay(day);
+  var tpl = templateFor(entry);
+
+  document.getElementById('dailyType').textContent = labelForType(entry.type)+' · Day '+day+' of '+PLAN_DAYS;
+  document.getElementById('dailyHeadline').textContent = fmtNice(entry.date)+' ('+DOW_LABELS[entry.dow]+')';
+  var sub = '';
+  if(entry.type==='learning') sub = dynamicContentFor(entry,'newtopic');
+  else if(entry.type==='project') sub = entry.project.t+' — '+entry.project.goal;
+  else if(entry.type==='review') sub = 'Weekly revision, self-test, progress review and next-week planning.';
+  else sub = 'Core syllabus complete — use today for consolidation, projects or interview prep.';
+  document.getElementById('dailySub').textContent = sub;
+  document.getElementById('dayNavLabel').textContent = day===baseDay ? 'Viewing today' : ('Viewing Day '+day);
+
+  var html = tpl.map(function(row){
+    var time=row[0], label=row[1], tag=row[2];
+    var isBreak = tag==='break';
+    var detail = DYNAMIC_TAGS.indexOf(tag)!==-1 ? dynamicContentFor(entry, tag) : staticDetailFor(tag);
+    return '<div class="slot '+(isBreak?'tag-break':'')+' '+(tag==='fixed'?'tag-fixed':'')+'">'+
+      '<div class="slot-time">'+time+'</div>'+
+      '<div class="slot-body"><div class="slot-label">'+label+'</div>'+
+      (detail?'<div class="slot-detail">'+detail+'</div>':'')+
+      (tag==='weeklyreviewlink'?'<button class="btn btn-sm" style="margin-top:4px;width:fit-content;" onclick="window.__goto(\'weeklyreview\')">Open Weekly Review →</button>':'')+
+      '</div></div>';
+  }).join('');
+  document.getElementById('dailyTimeline').innerHTML = html;
+}
+function staticDetailFor(tag){
+  var map = {
+    routine:'', recall:'Say out loud, in one sentence, what you learned yesterday.',
+    break:'Step away from the screen. Water, stretch, look at something far away.',
+    recall2:'Close every notebook and video. Write down everything you remember about today\u2019s topic, then check what you missed.',
+    rest:'', fixed:'Fixed commitment — protect this slot.',
+    practice:'Rotate focus daily: NumPy → Pandas → Matplotlib/Seaborn → Scikit-learn drills.',
+    free:'Genuinely free. No guilt.', shutdown:'Tick today\u2019s habit tracker, write one journal line, glance at tomorrow\u2019s topic.',
+    reading:'A chapter (or half) of Hands-On ML or ISLP — whichever maps to this week\u2019s topic.',
+    planproj:'', selftest:'Write 8–10 quiz questions covering this week and answer them cold.',
+    feynman:'Pick the concept you understood least this week and explain it out loud as if teaching a total beginner.',
+    progressreview:'Open the Progress Dashboard and update anything that needs a manual check.',
+    planweek:'Look at next week\u2019s topics on the ML Roadmap and note anything you should pre-read.'
+  };
+  return map[tag]!==undefined ? map[tag] : '';
+}
+
+/* ============================================================
+   RENDER: WEEKLY
+============================================================ */
+function renderWeekly(){
+  var today = new Date();
+  var baseDay = Math.max(1, Math.min(PLAN_DAYS, planDayForDate(today)));
+  var viewDay = Math.max(1, Math.min(PLAN_DAYS, baseDay + (state.weekOffset||0)*7));
+  var entry = entryForDay(viewDay);
+  var mondayOffset = (entry.dow===0) ? -6 : (1-entry.dow);
+  var mondayDayNum = viewDay + mondayOffset;
+
+  document.getElementById('weekNavLabel').textContent = 'Week of '+fmtNice(dateForPlanDay(Math.max(1,mondayDayNum)));
+
+  var html='';
+  for(var i=0;i<7;i++){
+    var d = mondayDayNum + i;
+    var withinRange = d>=1 && d<=PLAN_DAYS;
+    var e = withinRange ? entryForDay(d) : null;
+    var isToday = withinRange && toISO(e.date)===todayISO();
+    var titleText = '—';
+    if(e){
+      if(e.type==='learning') titleText = e.slot.topic.t;
+      else if(e.type==='project') titleText = e.project.t;
+      else if(e.type==='review') titleText = 'Weekly Revision';
+      else titleText = 'Capstone / Buffer';
+    }
+    var r = withinRange ? (getSchedule().revisionMap[d]||[]) : [];
+    html += '<div class="card" style="padding:12px;'+(isToday?'border-color:var(--ml);':'')+'">'+
+      '<div class="eyebrow" style="margin-bottom:4px;">'+DOW_LABELS[(withinRange?e.dow:0)]+'</div>'+
+      '<div style="font-family:var(--font-mono);font-size:11px;color:var(--text-faint);">'+(withinRange?fmtNice(e.date):'')+'</div>'+
+      '<div style="font-size:12.5px;font-weight:600;margin-top:6px;min-height:32px;">'+titleText+'</div>'+
+      '<div class="slot-tags">'+
+        (e && e.type==='learning' ? '<span class="tag tag-ml">new</span>' : '')+
+        (e && e.type==='project' ? '<span class="tag tag-proj">project</span>' : '')+
+        (r.length ? '<span class="tag tag-rev">'+r.length+' rev</span>' : '')+
+      '</div></div>';
+  }
+  document.getElementById('weeklyGrid').innerHTML = html;
+}
+
+/* ============================================================
+   RENDER: 3-MONTH ROADMAP
+============================================================ */
+function renderRoadmap(){
+  var sc = getSchedule();
+  var byPhase = {};
+  CURRICULUM.forEach(function(t,idx){
+    if(!byPhase[t.p]) byPhase[t.p]=[];
+    byPhase[t.p].push(idx);
+  });
+  // find plan day for each topic idx (day it's first *started*, i.e. part1 or part0)
+  var startDayForIdx = {};
+  sc.schedule.forEach(function(e){
+    if(e.type==='learning' && startDayForIdx[e.slot.idx]===undefined) startDayForIdx[e.slot.idx]=e.day;
+  });
+
+  var html='';
+  Object.keys(P).forEach(function(pk){
+    var idxs = byPhase[pk]||[];
+    var doneCount = idxs.filter(function(i){return state.topicDone[i];}).length;
+    var pct = idxs.length ? Math.round(doneCount/idxs.length*100) : 0;
+    html += '<div class="phase-block"><div class="phase-head"><div class="phase-name">'+P[pk]+'</div>'+
+      '<div style="display:flex;align-items:center;gap:8px;"><span style="font-family:var(--font-mono);font-size:11px;color:var(--text-faint);">'+doneCount+'/'+idxs.length+'</span>'+
+      '<div class="phase-bar"><i style="width:'+pct+'%"></i></div></div></div>';
+    idxs.forEach(function(idx){
+      var t = CURRICULUM[idx];
+      var pd = startDayForIdx[idx];
+      var dateStr = pd ? fmtNice(dateForPlanDay(pd))+' · Plan Day '+pd : 'Beyond 90-day window';
+      html += '<div class="topic-row '+(state.topicDone[idx]?'done':'')+'">'+
+        '<div class="topic-check">'+(state.topicDone[idx]?'✓':'')+'</div>'+
+        '<div class="topic-main"><div class="topic-title">'+t.t+(t.h?'<span class="tag">2-day</span>':'')+'</div>'+
+        '<div class="topic-meta">'+dateStr+(t.d?' · CampusX ~Day '+t.d:'')+'</div></div></div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('roadmapPhases').innerHTML = html;
+
+  var buf = 'Core syllabus finishes around Plan Day '+(sc.lastContentDay||'—')+'. ';
+  if(sc.leftoverTopics>0) buf += sc.leftoverTopics+' topic(s) fall beyond the 90-day window — push your start date earlier or accept a slightly longer runway. ';
+  buf += 'Every day after the syllabus finishes becomes a Capstone / Buffer day: portfolio polishing, weak-topic revision, mock interviews and remaining projects.';
+  document.getElementById('roadmapBuffer').textContent = buf;
+}
+
+/* ============================================================
+   RENDER: ML ROADMAP
+============================================================ */
+function renderMLRoadmap(){
+  var byPhase = {};
+  CURRICULUM.forEach(function(t,idx){ if(!byPhase[t.p]) byPhase[t.p]=[]; byPhase[t.p].push(idx); });
+  var html='';
+  Object.keys(P).forEach(function(pk){
+    html += '<div class="phase-block"><div class="phase-head"><div class="phase-name">'+P[pk]+'</div></div>';
+    byPhase[pk].forEach(function(idx){
+      var t = CURRICULUM[idx];
+      html += '<div class="topic-row '+(state.topicDone[idx]?'done':'')+'" onclick="window.__toggleTopic('+idx+')">'+
+        '<div class="topic-check">'+(state.topicDone[idx]?'✓':'')+'</div>'+
+        '<div class="topic-main"><div class="topic-title">'+t.t+' '+(t.h?'<span class="tag">2-day</span>':'')+
+        (t.pr.length?t.pr.map(function(p){return '<span class="tag tag-ml">'+p+'</span>';}).join(''):'')+'</div>'+
+        '<div class="topic-meta">'+(t.d?'CampusX ~Day '+t.d:'CampusX — day number varies')+'</div>'+
+        (t.m.length?'<div class="topic-math">Math: '+t.m.join(' • ')+'</div>':'')+
+        '</div></div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('mlRoadmapList').innerHTML = html;
+}
+window.__toggleTopic = function(idx){
+  state.topicDone[idx] = !state.topicDone[idx];
+  saveState();
+  renderMLRoadmap(); renderRoadmap();
+};
+
+/* ============================================================
+   RENDER: MATH ROADMAP
+============================================================ */
+function renderMathRoadmap(){
+  var byPhase = {};
+  CURRICULUM.forEach(function(t,idx){
+    t.m.forEach(function(mathTopic){
+      if(!byPhase[t.p]) byPhase[t.p]=[];
+      byPhase[t.p].push({math:mathTopic, topic:t, idx:idx});
+    });
+  });
+  var html='';
+  Object.keys(P).forEach(function(pk){
+    if(!byPhase[pk] || !byPhase[pk].length) return;
+    html += '<div class="phase-block"><div class="phase-head"><div class="phase-name">'+P[pk]+'</div></div>';
+    byPhase[pk].forEach(function(item,i){
+      var key = 'm_'+pk+'_'+i;
+      html += '<div class="topic-row '+(state.topicDone['math_'+key]?'done':'')+'" onclick="window.__toggleMath(\''+key+'\')">'+
+        '<div class="topic-check">'+(state.topicDone['math_'+key]?'✓':'')+'</div>'+
+        '<div class="topic-main"><div class="topic-title">'+item.math+'</div>'+
+        '<div class="topic-meta">Needed for: '+item.topic.t+(item.topic.d?' (CampusX ~Day '+item.topic.d+')':'')+'</div></div></div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('mathRoadmapList').innerHTML = html;
+}
+window.__toggleMath = function(key){
+  var k='math_'+key;
+  state.topicDone[k] = !state.topicDone[k];
+  saveState(); renderMathRoadmap();
+};
+
+/* ============================================================
+   RENDER: PROJECTS
+============================================================ */
+function renderProjects(){
+  var sc = getSchedule();
+  var projDate = {};
+  sc.schedule.forEach(function(e){ if(e.type==='project') projDate[e.projectIdx]=e.day; });
+  var html = PROJECTS.map(function(pr,i){
+    var unlocked = state.topicDone[pr.after-1] !== undefined || true;
+    var dateStr = projDate[i] ? fmtNice(dateForPlanDay(projDate[i]))+' · Plan Day '+projDate[i] : 'Beyond current 90-day window';
+    return '<div class="card project-card">'+
+      '<div class="project-head"><div class="project-title">'+(i+1)+'. '+pr.t+'</div>'+
+      '<div class="topic-check" style="cursor:pointer;" onclick="window.__toggleProject('+i+')">'+(state.projectDone[i]?'✓':'')+'</div></div>'+
+      '<div class="project-goal">'+pr.goal+'</div>'+
+      '<div class="project-row"><span><b>Scheduled:</b> '+dateStr+'</span></div>'+
+      '<div class="project-row"><span><b>Hours:</b> ~'+pr.hours+'h</span><span><b>Tech:</b> '+pr.tech.join(', ')+'</span></div>'+
+      '<div class="project-row"><span><b>Skills:</b> '+pr.skills.join(', ')+'</span></div>'+
+      '<div class="project-row"><span><b>Deliverables:</b> '+pr.deliverables.join('; ')+'</span></div>'+
+      '</div>';
+  }).join('');
+  document.getElementById('projectList').innerHTML = html;
+}
+window.__toggleProject = function(i){
+  state.projectDone[i] = !state.projectDone[i];
+  saveState(); renderProjects(); 
+};
+
+/* ============================================================
+   RENDER: REVISION CALENDAR
+============================================================ */
+var revisionSelectedDay = null;
+function renderRevisionCalendar(){
+  var dowHtml = DOW_LABELS.slice(1).concat(DOW_LABELS[0]).map(function(l){ return '<div class="cal-dow">'+l+'</div>'; }).join('');
+  document.getElementById('revisionCalDow').innerHTML = dowHtml;
+
+  var sc = getSchedule();
+  var firstEntry = sc.schedule[0];
+  var leadingBlank = (firstEntry.dow===0) ? 6 : (firstEntry.dow-1);
+  var html='';
+  for(var b=0;b<leadingBlank;b++) html += '<div></div>';
+
+  sc.schedule.forEach(function(e){
+    var revs = sc.revisionMap[e.day]||[];
+    var kinds = {}; revs.forEach(function(r){kinds[r.kind]=true;});
+    var isToday = toISO(e.date)===todayISO();
+    var dots='';
+    if(e.type==='learning') dots += '<span class="cal-dot" style="background:var(--math)"></span>';
+    if(kinds['24h']) dots += '<span class="cal-dot" style="background:var(--ml)"></span>';
+    if(kinds['week']||kinds['interleave']) dots += '<span class="cal-dot" style="background:var(--rev)"></span>';
+    if(kinds['month']) dots += '<span class="cal-dot" style="background:var(--proj)"></span>';
+    html += '<div class="cal-cell '+(isToday?'today':'')+'" onclick="window.__showRevDay('+e.day+')">'+
+      '<div>'+e.date.getDate()+'</div><div class="cal-dots">'+dots+'</div></div>';
+  });
+  document.getElementById('revisionCalGrid').innerHTML = html;
+  if(revisionSelectedDay) window.__showRevDay(revisionSelectedDay);
+}
+window.__showRevDay = function(day){
+  revisionSelectedDay = day;
+  var e = entryForDay(day);
+  var sc = getSchedule();
+  var revs = sc.revisionMap[day]||[];
+  var html = '<div class="eyebrow">'+fmtNice(e.date)+' · Plan Day '+day+'</div>';
+  if(e.type==='learning'){
+    html += '<div style="font-size:13.5px;margin-bottom:8px;"><b>New topic:</b> '+e.slot.topic.t+'</div>';
+  }
+  if(!revs.length){
+    html += '<div class="empty-note">No revision scheduled this day.</div>';
+  } else {
+    html += revs.map(function(r){
+      var label = r.kind==='24h'?'24-Hour':r.kind==='week'?'Weekly':r.kind==='month'?'Monthly':'Interleaved';
+      var color = r.kind==='24h'?'var(--ml)':r.kind==='month'?'var(--proj)':'var(--rev)';
+      return '<div style="font-size:13px;margin:4px 0;"><span class="tag" style="border-color:'+color+';color:'+color+'">'+label+'</span> '+topicLabel(r.idx)+'</div>';
+    }).join('');
+  }
+  document.getElementById('revisionDayDetail').innerHTML = html;
+};
+
+/* ============================================================
+   RENDER: HABIT TRACKER
+============================================================ */
+var habitMonthView = 0; // 0,1,2
+function renderHabits(){
+  var tabsHtml = ['Days 1–30','Days 31–60','Days 61–90'].map(function(l,i){
+    return '<div class="month-tab '+(habitMonthView===i?'active':'')+'" onclick="window.__setHabitMonth('+i+')">'+l+'</div>';
+  }).join('');
+  document.getElementById('habitMonthTabs').innerHTML = tabsHtml;
+
+  var startDay = habitMonthView*30+1, endDay = Math.min(PLAN_DAYS, startDay+29);
+  var thead = '<tr><th>Date</th>'+HABIT_KEYS.map(function(h){return '<th>'+h[1]+'</th>';}).join('')+'</tr>';
+  var rows='';
+  for(var d=startDay; d<=endDay; d++){
+    var date = dateForPlanDay(d);
+    var iso = toISO(date);
+    var h = state.habits[iso] || {};
+    rows += '<tr><td>'+fmtNice(date)+'</td>'+HABIT_KEYS.map(function(hk){
+      var on = !!h[hk[0]];
+      return '<td><span class="hcheck '+(on?'on':'')+'" onclick="window.__toggleHabit(\''+iso+'\',\''+hk[0]+'\')">'+(on?'✓':'')+'</span></td>';
+    }).join('')+'</tr>';
+  }
+  document.getElementById('habitTable').innerHTML = thead+rows;
+}
+window.__setHabitMonth = function(i){ habitMonthView=i; renderHabits(); };
+window.__toggleHabit = function(iso, key){
+  if(!state.habits[iso]) state.habits[iso]={};
+  state.habits[iso][key] = !state.habits[iso][key];
+  saveState(); renderHabits(); refreshTopbar();
+};
+
+function habitScoreForRange(fromDt, toDt){
+  var days=0, sum=0;
+  var d = new Date(fromDt);
+  while(d<=toDt){
+    var iso = toISO(d);
+    var h = state.habits[iso];
+    if(h){
+      var checked = HABIT_KEYS.filter(function(k){return h[k[0]];}).length;
+      sum += checked/HABIT_KEYS.length;
+    }
+    days++;
+    d = addDays(d,1);
+  }
+  return days ? Math.round(sum/days*100) : 0;
+}
+
+/* ============================================================
+   RENDER: PROGRESS
+============================================================ */
+function renderProgress(){
+  var topicsMastered = Object.keys(state.topicDone).filter(function(k){return !isNaN(k) && state.topicDone[k];}).length;
+  var projectsDone = Object.keys(state.projectDone).filter(function(k){return state.projectDone[k];}).length;
+  var revStreak = computeStreak('revision');
+  var totalHours = Object.values(state.hours).reduce(function(a,b){return a+(parseFloat(b)||0);},0);
+  var weekPct = habitScoreForRange(addDays(new Date(),-6), new Date());
+  var monthPct = habitScoreForRange(addDays(new Date(),-29), new Date());
+
+  var stats = [
+    ['Topics Mastered', topicsMastered+' / '+CURRICULUM.length],
+    ['Projects Completed', projectsDone+' / '+PROJECTS.length],
+    ['Revision Streak', revStreak+' days'],
+    ['Weekly Score', weekPct+'%'],
+    ['Monthly Score', monthPct+'%'],
+    ['Total Logged Hours', totalHours.toFixed(1)+'h']
+  ];
+  document.getElementById('progressStats').innerHTML = stats.map(function(s){
+    return '<div class="card stat-card"><div class="stat-label">'+s[0]+'</div><div class="stat-num">'+s[1]+'</div></div>';
+  }).join('');
+
+  // weekly score chart across 13 weeks from start date
+  var start = getStartDate();
+  var bars='';
+  for(var w=0; w<13; w++){
+    var wStart = addDays(start, w*7), wEnd = addDays(start, w*7+6);
+    var pct = habitScoreForRange(wStart, wEnd);
+    bars += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">'+
+      '<div style="width:60px;font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);">Wk '+(w+1)+'</div>'+
+      '<div style="flex:1;height:10px;background:var(--surface-2);border-radius:6px;overflow:hidden;">'+
+      '<div style="width:'+pct+'%;height:100%;background:linear-gradient(90deg,var(--ml),var(--rev));"></div></div>'+
+      '<div style="width:36px;font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);text-align:right;">'+pct+'%</div></div>';
+  }
+  document.getElementById('weeklyScoreChart').innerHTML = bars;
+}
+
+/* ============================================================
+   RENDER: NOTES
+============================================================ */
+function renderNotes(){
+  var sel = document.getElementById('notesTopicSelect');
+  if(!sel.dataset.built){
+    sel.innerHTML = CURRICULUM.map(function(t,idx){ return '<option value="'+idx+'">'+P[t.p]+' — '+t.t+'</option>'; }).join('');
+    sel.dataset.built='1';
+    sel.addEventListener('change', function(){ loadNoteIntoTextarea(); });
+  }
+  loadNoteIntoTextarea();
+}
+function loadNoteIntoTextarea(){
+  var idx = document.getElementById('notesTopicSelect').value;
+  document.getElementById('notesTextarea').value = state.notes[idx] || '';
+}
+
+/* ============================================================
+   RENDER: GOALS
+============================================================ */
+function renderGoals(){
+  var html = state.goals.map(function(g){
+    return '<div class="goal-item '+(g.done?'done':'')+'">'+
+      '<div class="topic-check" style="cursor:pointer;" onclick="window.__toggleGoal(\''+g.id+'\')">'+(g.done?'✓':'')+'</div>'+
+      '<div class="goal-text">'+escapeHtml(g.text)+'</div>'+
+      '<button class="btn btn-sm btn-ghost" onclick="window.__deleteGoal(\''+g.id+'\')">✕</button></div>';
+  }).join('');
+  document.getElementById('goalList').innerHTML = html || '<div class="empty-note">No goals yet — add one above.</div>';
+}
+function escapeHtml(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+window.__toggleGoal = function(id){
+  var g = state.goals.find(function(x){return x.id===id;});
+  if(g){ g.done=!g.done; saveState(); renderGoals(); }
+};
+window.__deleteGoal = function(id){
+  state.goals = state.goals.filter(function(x){return x.id!==id;});
+  saveState(); renderGoals();
+};
+
+/* ============================================================
+   RENDER: JOURNAL
+============================================================ */
+function renderJournal(){
+  var dateInput = document.getElementById('journalDate');
+  if(!dateInput.value) dateInput.value = todayISO();
+  loadJournalForDate(dateInput.value);
+}
+function loadJournalForDate(iso){
+  var j = state.journal[iso] || {well:'',hard:'',remember:''};
+  document.getElementById('journalWell').value = j.well;
+  document.getElementById('journalHard').value = j.hard;
+  document.getElementById('journalRemember').value = j.remember;
+}
+
+/* ============================================================
+   RENDER: WEEKLY / MONTHLY REVIEW
+============================================================ */
+function currentWeekNum(){
+  var today = new Date();
+  var day = Math.max(1, Math.min(PLAN_DAYS, planDayForDate(today)));
+  return Math.ceil(day/7);
+}
+function currentMonthNum(){
+  var today = new Date();
+  var day = Math.max(1, Math.min(PLAN_DAYS, planDayForDate(today)));
+  return Math.ceil(day/30);
+}
+function renderWeeklyReview(){
+  var wk = currentWeekNum();
+  document.getElementById('weeklyReviewTitle').textContent = 'Weekly Review — Week '+wk;
+  var r = state.weeklyReview[wk] || {completion:'',worked:'',notWorked:'',nextPlan:''};
+  document.getElementById('wrCompletion').value = r.completion;
+  document.getElementById('wrWorked').value = r.worked;
+  document.getElementById('wrNotWorked').value = r.notWorked;
+  document.getElementById('wrNextPlan').value = r.nextPlan;
+}
+function renderMonthlyReview(){
+  var mo = currentMonthNum();
+  document.getElementById('monthlyReviewTitle').textContent = 'Monthly Review — Month '+mo;
+  var r = state.monthlyReview[mo] || {win:'',challenge:'',revisit:'',nextPlan:''};
+  document.getElementById('mrWin').value = r.win;
+  document.getElementById('mrChallenge').value = r.challenge;
+  document.getElementById('mrRevisit').value = r.revisit;
+  document.getElementById('mrNextPlan').value = r.nextPlan;
+}
+
+/* ============================================================
+   RENDER: RESOURCES
+============================================================ */
+function renderResources(){
+  var groups = [
+    ['Books', ['<i>Hands-On Machine Learning</i> — Aurélien Géron','<i>An Introduction to Statistical Learning</i> (ISLP)','<i>Python for Data Analysis</i> — Wes McKinney']],
+    ['Documentation', ['scikit-learn.org/stable','pandas.pydata.org/docs','numpy.org/doc']],
+    ['YouTube Channels', ['CampusX (100 Days of ML)','StatQuest with Josh Starmer','3Blue1Brown — Essence of Linear Algebra & Calculus','Krish Naik']],
+    ['Practice Websites', ['Kaggle Learn micro-courses','HackerRank (Python & SQL tracks)','LeetCode (SQL + easy/medium DSA)','Google Colab for free GPU notebooks']],
+    ['Kaggle Datasets', ['Titanic — Machine Learning from Disaster','House Prices — Advanced Regression Techniques','Telco Customer Churn','Mall Customer Segmentation Data']],
+    ['GitHub Repos', ['campusx-official/100-days-of-machine-learning','josephmisiti/awesome-machine-learning','scikit-learn/scikit-learn (read the source for intuition)']]
+  ];
+  document.getElementById('resourcesGrid').innerHTML = groups.map(function(g){
+    return '<div class="card resource-card"><h4>'+g[0]+'</h4><ul>'+g[1].map(function(i){return '<li>'+i+'</li>';}).join('')+'</ul></div>';
+  }).join('');
+}
+
+/* ============================================================
+   EVENTS / WIRING
+============================================================ */
+window.__goto = function(v){ setActiveView(v); };
+
+document.addEventListener('click', function(e){
+  var navItem = e.target.closest('.nav-item');
+  if(navItem){ setActiveView(navItem.getAttribute('data-view')); return; }
+  var gotoBtn = e.target.closest('[data-goto]');
+  if(gotoBtn){ setActiveView(gotoBtn.getAttribute('data-goto')); return; }
+});
+
+document.getElementById('hamburgerBtn').addEventListener('click', function(){
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+document.getElementById('startDateInput').addEventListener('change', function(e){
+  state.startDate = e.target.value;
+  invalidateSchedule();
+  saveState();
+  refreshTopbar();
+  renderDashboard();
+});
+
+document.getElementById('resetDataBtn').addEventListener('click', function(){
+  if(confirm('This clears everything saved in this browser (habits, notes, journal, progress). Continue?')){
+    localStorage.removeItem(STORE_KEY);
+    state = defaultState();
+    invalidateSchedule();
+    refreshTopbar();
+    renderView(currentViewName());
+  }
+});
+
+function currentViewName(){
+  var active = document.querySelector('.nav-item.active');
+  return active ? active.getAttribute('data-view') : 'dashboard';
+}
+
+// Daily nav
+document.getElementById('dayPrev').addEventListener('click', function(){ state.viewedDayOffset--; saveState(); renderDaily(); });
+document.getElementById('dayNext').addEventListener('click', function(){ state.viewedDayOffset++; saveState(); renderDaily(); });
+document.getElementById('dayToday').addEventListener('click', function(){ state.viewedDayOffset=0; saveState(); renderDaily(); });
+
+// Weekly nav
+document.getElementById('weekPrev').addEventListener('click', function(){ state.weekOffset=(state.weekOffset||0)-1; renderWeekly(); });
+document.getElementById('weekNext').addEventListener('click', function(){ state.weekOffset=(state.weekOffset||0)+1; renderWeekly(); });
+document.getElementById('weekToday').addEventListener('click', function(){ state.weekOffset=0; renderWeekly(); });
+
+// Notes autosave
+document.getElementById('notesTextarea').addEventListener('input', function(e){
+  var idx = document.getElementById('notesTopicSelect').value;
+  state.notes[idx] = e.target.value;
+  saveState();
+});
+
+// Goals
+document.getElementById('goalAddBtn').addEventListener('click', addGoal);
+document.getElementById('goalInput').addEventListener('keydown', function(e){ if(e.key==='Enter') addGoal(); });
+function addGoal(){
+  var input = document.getElementById('goalInput');
+  var text = input.value.trim();
+  if(!text) return;
+  state.goals.push({id:'g'+Date.now(), text:text, done:false});
+  input.value='';
+  saveState(); renderGoals();
+}
+
+// Journal autosave
+['journalWell','journalHard','journalRemember'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', saveJournal);
+});
+document.getElementById('journalDate').addEventListener('change', function(e){ loadJournalForDate(e.target.value); });
+function saveJournal(){
+  var iso = document.getElementById('journalDate').value || todayISO();
+  state.journal[iso] = {
+    well: document.getElementById('journalWell').value,
+    hard: document.getElementById('journalHard').value,
+    remember: document.getElementById('journalRemember').value
+  };
+  saveState();
+}
+
+// Weekly review autosave
+['wrCompletion','wrWorked','wrNotWorked','wrNextPlan'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', function(){
+    var wk = currentWeekNum();
+    state.weeklyReview[wk] = {
+      completion: document.getElementById('wrCompletion').value,
+      worked: document.getElementById('wrWorked').value,
+      notWorked: document.getElementById('wrNotWorked').value,
+      nextPlan: document.getElementById('wrNextPlan').value
+    };
+    saveState();
+  });
+});
+// Monthly review autosave
+['mrWin','mrChallenge','mrRevisit','mrNextPlan'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', function(){
+    var mo = currentMonthNum();
+    state.monthlyReview[mo] = {
+      win: document.getElementById('mrWin').value,
+      challenge: document.getElementById('mrChallenge').value,
+      revisit: document.getElementById('mrRevisit').value,
+      nextPlan: document.getElementById('mrNextPlan').value
+    };
+    saveState();
+  });
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+function init(){
+  state = loadState();
+  refreshTopbar();
+  setActiveView('dashboard');
+  setInterval(refreshTopbar, 60000);
+}
+init();
+
+})();
+</script>
+</body>
+</html>
